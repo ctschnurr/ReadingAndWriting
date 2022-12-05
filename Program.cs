@@ -102,11 +102,12 @@ namespace ReadingAndWriting
         static void ChangeName()
         {
             Console.Clear();
-            Console.WriteLine("Please enter your name:");
+            Console.Write("Please enter your name: ");
             string nameSave = Console.ReadLine();
 
-            System.IO.File.WriteAllText(@"name.txt", nameSave);
+            System.IO.File.WriteAllText(@".\name.txt", nameSave);
 
+            Console.WriteLine();
             Console.WriteLine("Thank you, " + nameSave + "! I'll remember you for next time.");
         }
     }
