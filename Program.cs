@@ -8,44 +8,85 @@ namespace ReadingAndWriting
 {
     internal class Program
     {
+
+        static string name;
+        static string[] readMap;
+
+        static char[,] map;
+
         static void Main(string[] args)
         {
-
-            string[] map = {"^^^''''''''",
-                            "^^''''**'''",
-                            "^^'''**''''",
-                            "^''''''''''",
-                            "''''~~~''''",
-                            "''''~~~''''",
-                            "'''~~~~''''",
-                            "'''''~~~'''",
-                            "'''''~~~~''",
-                            "'''''''~'''",
-                            "'''''''''''"};
-
-            // System.IO.File.WriteAllLines(@"map.txt", map);
-
-            // System.IO.File.WriteAllText(@".WriteLines2.txt", lines);
-
-            string[] readMap = System.IO.File.ReadAllLines(@"readMap.txt");
-            int mapwidth = readMap[0].Length;
-            int mapheight = readMap.Count();
-            char[,] Map = new char[mapheight,mapwidth];
-
-            for (int x = 0; x < readMap.Length; x++)
+            if (System.IO.File.Exists("name.txt"))
             {
-                char[] eatmap = readMap[x].ToCharArray();
-                Array.Copy(eatmap, 0, Map, x, eatmap.Length);
+                name = System.IO.File.ReadAllText(@"name.txt");
+
+                Console.WriteLine("Welcome back, " + name + "!");
+                Console.WriteLine();
+                Console.WriteLine("(L)oad Map File");
+                Console.WriteLine("(I)'m not " + name + "!");
+                
+                ConsoleKeyInfo choice = Console.ReadKey(true);
+
+                if (choice.Key == ConsoleKey.I)
+                {
+                    ChangeName();
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Please enter your name, I'll remember you next time!");
+                name = Console.ReadLine();
+
+                System.IO.File.Create(@"name.txt").Close();
+                System.IO.File.WriteAllText(@"name.txt", name);
+
+            }
+
+            if (System.IO.File.Exists("map.txt") == true)
+            {
+                readMap = System.IO.File.ReadAllLines(@"map.txt");
+
+                int mapWidth = readMap[0].Length;
+                int mapHeight = readMap.Count();
+
+                map = new char[mapHeight, mapWidth];
+
+                Console.WriteLine();
+                Console.WriteLine("Map Load Successful");
+                Console.ReadKey(true);
+
+                Console.Clear();
+
+                for (int y = 0; y < readMap.Length; y++)
+                {
+                    int next = 0;
+                    foreach (char letter in readMap[y])
+                    {
+                        map[y, next] = letter;
+                        next++;
+                    }
+                }
+
+                DisplayMap(mapHeight, mapWidth);
+                Console.WriteLine();
+                Console.WriteLine("Press any key to close program.");
+                Console.WriteLine();
+                Console.ReadKey(true);
+
+
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Map file not found.");
+                Console.ReadKey(true);
             }
 
             
-
-            Console.ReadKey(true);
-
-
         }
 
-        static void DisplayMap()
+        static void DisplayMap(int mapHeight, int mapWidth)
         {
 
             for (int mapX = 0; mapX < mapHeight; mapX++)
@@ -55,10 +96,18 @@ namespace ReadingAndWriting
                 {
                     Console.Write(map[mapX, mapY]);
                 }
-                Console.WriteLine();
-                Console.WriteLine("Raw Map Data");
             }
+        }
 
+        static void ChangeName()
+        {
+            Console.Clear();
+            Console.WriteLine("Please enter your name:");
+            string nameSave = Console.ReadLine();
+
+            System.IO.File.WriteAllText(@"name.txt", nameSave);
+
+            Console.WriteLine("Thank you, " + nameSave + "! I'll remember you for next time.");
         }
     }
 }
